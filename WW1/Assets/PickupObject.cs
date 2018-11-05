@@ -9,6 +9,7 @@ public class PickupObject : MonoBehaviour
     GameObject carriedObject;
     public float distance;
     public float smooth;
+    Vector3 prevPosition;
     // Use this for initialization
     void Start()
     {
@@ -32,11 +33,12 @@ public class PickupObject : MonoBehaviour
     void Carry(GameObject o)
     {
         o.transform.position = Vector3.Lerp(o.transform.position, mainCamera.transform.position + mainCamera.transform.forward * distance, Time.deltaTime * smooth);
+        o.transform.rotation = mainCamera.transform.rotation;
     }
 
     void Pickup()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             int x = Screen.width / 2;
             int y = Screen.height / 2;
@@ -51,6 +53,7 @@ public class PickupObject : MonoBehaviour
                     carrying = true;
                     carriedObject = p.gameObject;
                     gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                    carriedObject.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 }
             }
         }
@@ -58,7 +61,7 @@ public class PickupObject : MonoBehaviour
 
     void CheckDrop()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             DropObject();
         }
@@ -68,6 +71,7 @@ public class PickupObject : MonoBehaviour
     {
         carrying = false;
         carriedObject.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+        carriedObject.gameObject.GetComponent<Rigidbody>().useGravity = true;
         carriedObject = null;
     }
 }
